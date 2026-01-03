@@ -1,0 +1,1023 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath}
+\usepackage{ctex}
+\usepackage{siunitx}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{gensymb} 
+\usepackage{xcolor}
+\usepackage{soul} 
+\usepackage{tcolorbox} 
+\usepackage{float} 
+\usepackage{circledsteps}
+\usepackage{pgfplots} % 绘图核心宏包
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=cyan,bookmarksopen=true]{hyperref}
+\usepackage{bookmark}
+\pgfplotsset{compat=1.17} % 适配宏包版本（建议与已安装版本一致）
+\newtcolorbox[auto counter, number within=section]{highlightedsection}[2][]{colframe=cyan!80!black, colback=cyan!30, coltitle=black, sharp corners, fonttitle=\bfseries, title=#2,#1}
+
+\title{计网B复习记录-基于《计算机网络——自顶向下方法》} 
+\author{23级自动化某不知名人士}
+\date{2025年12月}
+% 定义带圈数字命令
+\newcommand{\circled}[1]{%
+  \tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=1pt,minimum size=1.2em] (char) {#1};
+  }%
+}
+
+\begin{document}
+
+% ========== 手动目录 ==========
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{目录}
+\begin{center}
+    \LARGE\textbf{目\quad 录}
+\end{center}
+\vspace{2em}
+
+\begin{itemize}
+  \item \hyperref[sec:2.1]{\textbf{第二章\,\,\,应用层}} \dotfill 第 \pageref{sec:2.1} 页
+    \begin{itemize}
+      \item \hyperref[sec:2.1.1]{2.1 网络应用原理} \dotfill 第 \pageref{sec:2.1.1} 页
+      \item \hyperref[sec:2.1.2]{2.2 HTTP} \dotfill 第 \pageref{sec:2.1.2} 页
+      \item \hyperref[sec:2.1.3]{2.3 EMAIL} \dotfill 第 \pageref{sec:2.1.3} 页
+      \item \hyperref[sec:2.1.4]{2.4 DNS} \dotfill 第 \pageref{sec:2.1.4} 页
+      \item \hyperref[sec:2.1.6]{2.6 内容分发网络CDN} \dotfill 第 \pageref{sec:2.1.6} 页
+      \item \hyperref[sec:2.1.7]{2.7 套接字编程} \dotfill 第 \pageref{sec:2.1.7} 页
+    \end{itemize}
+
+  \item \hyperref[sec:3.1]{\textbf{第三章\,\,\,运输层}} \dotfill 第 \pageref{sec:3.1} 页
+    \begin{itemize}
+      \item \hyperref[sec:3.1.1]{3.1 概述和传输层服务} \dotfill 第 \pageref{sec:3.1.1} 页
+      \item \hyperref[sec:3.1.2]{3.2 多路复用与多路分解} \dotfill 第 \pageref{sec:3.1.2} 页
+      \item \hyperref[sec:3.1.3]{3.3 无连接运输：UDP} \dotfill 第 \pageref{sec:3.1.3} 页
+      \item \hyperref[sec:3.1.4]{3.4 可靠数据传输原理} \dotfill 第 \pageref{sec:3.1.4} 页
+      \item \hyperref[sec:3.1.5]{3.5 面向连接的传输：TCP} \dotfill 第 \pageref{sec:3.1.5} 页
+      \item \hyperref[sec:3.1.6]{3.6 拥塞控制原理} \dotfill 第 \pageref{sec:3.1.6} 页
+      \item \hyperref[sec:3.1.7]{3.7 TCP拥塞控制（掌握）} \dotfill 第 \pageref{sec:3.1.7} 页
+    \end{itemize} 
+
+  \item \hyperref[sec:4.1]{\textbf{第四章\,\,\,网络层：数据平面}} \dotfill 第 \pageref{sec:4.1} 页
+    \begin{itemize}
+      \item \hyperref[sec:4.1.1]{4.1 网络层概述} \dotfill 第 \pageref{sec:4.1.1} 页
+      \item \hyperref[sec:4.1.2]{4.2 路由器工作原理} \dotfill 第 \pageref{sec:4.1.2} 页
+      \item \hyperref[sec:4.1.3]{4.3 网际协议：IPv4、寻址、IPv6及其他} \dotfill 第 \pageref{sec:4.1.3} 页
+    \end{itemize}
+  \item \hyperref[sec:5.1]{\textbf{第五章\,\,\,网络层：控制平面}} \dotfill 第 \pageref{sec:5.1} 页
+    \begin{itemize}
+      \item \hyperref[sec:5.1.1]{5.1 概述} \dotfill 第 \pageref{sec:5.1.1} 页
+      \item \hyperref[sec:5.1.2]{5.2 路由选择算法} \dotfill 第 \pageref{sec:5.1.2} 页
+      \item \hyperref[sec:5.1.3]{5.3 因特网中自治系统内部的路由选择：OSPF} \dotfill 第 \pageref{sec:5.1.3} 页
+      \item \hyperref[sec:5.1.4]{5.4 ISP之间的路由选择：BGP} \dotfill 第 \pageref{sec:5.1.4} 页
+      \item \hyperref[sec:5.1.5]{5.5 ICMP：因特网控制报文协议} \dotfill 第 \pageref{sec:5.1.5} 页
+    \end{itemize} 
+  \item \hyperref[sec:6.1]{\textbf{第六章\,\,\,链路层和局域网}} \dotfill 第 \pageref{sec:6.1} 页
+    \begin{itemize}
+      \item \hyperref[sec:6.1.1]{6.1 链路层概述} \dotfill 第 \pageref{sec:6.1.1} 页
+      \item \hyperref[sec:6.1.2]{6.2 差错检测和纠正技术} \dotfill 第 \pageref{sec:6.1.2} 页
+      \item \hyperref[sec:6.1.3]{6.3 多路访问链路和协议} \dotfill 第 \pageref{sec:6.1.3} 页
+      \item \hyperref[sec:6.1.4]{6.4 交换局域网} \dotfill 第 \pageref{sec:6.1.4} 页
+    \end{itemize} 
+  \item \hyperref[app:glossary]{\textbf{附录：英文术语缩写对照表}} \dotfill 第 \pageref{app:glossary} 页
+\end{itemize}
+
+\newpage
+
+
+\maketitle
+
+% 使用 tcolorbox 使标题带有荧光笔效果
+\begin{highlightedsection}{}
+    第二章\,\,应用层
+\end{highlightedsection}
+\label{sec:2.1}
+\section*{2.1 网络应用原理}
+\label{sec:2.1.1}
+\subsection*{1. 应用架构}
+\noindent
+\circled{1}客户-服务器体系结构（C/S）：有一个总是打开的主机，称为服务器，它服务于许多其他成为客户的主机的请求；\\
+\circled{2}P2P体系结构：应用程序在间断连接的主机对之间使用直接通信，这些主机被称为对等方。
+
+\subsection*{2.进程间通信}
+\noindent
+\circled{1}进行通信的实际上是进程而不是程序；\\
+\circled{2}客户和服务器进程：网络应用程序由成对的进程组成，把两个进程之一（发起通信的）称为客户，另一个进程（会话开始时等待
+联系的）称为服务器。
+
+\subsection*{3.SOCKET}
+\noindent
+\circled{1}进程通过一个叫套接字（socket，也称为应用编程接口API）的软件接口向网络发送报文和从网络接收报文；\\
+\circled{2}TCP： 连接的本地标示 ；\\
+\circled{3}UDP： 端节点的本地标示。
+
+\subsection*{4.进程编址 }
+\noindent
+\circled{1}IP+PORT（本质上在传输层上应用了端口号，用于区分应用，
+TCP和UDP使用端口号的方式不同） 。
+
+\subsection*{5.应用所需要的服务需要考虑的因素}
+\noindent
+\circled{1}可靠数据传输；\\
+\circled{2}吞吐量；\\
+\circled{3}定时；\\
+\circled{4}安全性。
+
+\subsection*{6.传输层协议}
+\noindent
+\circled{1}TCP提供的服务特性：可靠字节流服务，面向连接，流量控制，拥塞控
+制；\\
+\circled{2}UDP提供的服务特性：无连接，不可靠的服务；\\
+\circled{3}都能够提供进程的标示，区分不同的进程。
+
+
+\section*{2.2 HTTP }
+\label{sec:2.1.2}
+\subsection*{1.http请求报文请求行方法 }
+\noindent
+GET,POST,DELETE,PUT,HEAD 
+
+\subsection*{2.cookie }
+\noindent
+\circled{1}允许站点对用户进行跟踪；\\
+\circled{2}服务器识别到某个用户首次访问时，产生一个唯一识别码
+
+\subsection*{3.web缓存 }
+\noindent
+\circled{1}又名代理服务器，有自己的存储空间，可以保存最近请求过的对象的副本；\\
+\circled{2}既是服务器又是客户；\\
+\circled{3}大大减少对客户请求的响应时间，大大减少一个机构的接入链路到因特网的通信量；\\
+\circled{4}为了避免内容更新带来的不一致性问题，缓存需要定期与原始服务器进行验证:使用条件GET请求。
+
+\subsection*{4.HTTP/2 }
+\noindent
+\circled{1}减小感知时延：经单一TCP连接使请求与响应多路复用，提供请求优先次序和服务器推，摆脱传送
+单一界面时的并行TCP连接；\\
+\circled{2}HTTP/2成帧：将每个报文分成小帧，交错发送他们；\\
+\circled{3}响应报文的优先次序：允许研发者根据用户要求安排请求的相对优先权，较大的数字表明
+较高的优先权；\\
+\circled{4}服务器推：除了对初始请求的响应外，服务器能够向该客户推额外的对象。
+
+\section*{2.3 EMAIL}
+\label{sec:2.1.3}
+\subsection*{1.关键组成部分 }
+\noindent
+\circled{1}用户代理：允许用户阅读、转发、回复、保存和撰写报文；\\
+\circled{2}邮件服务器：电子邮件体系结构的核心；\\
+\circled{3}简单邮件传输协议（SMTP）：是因特网电子邮件中主要的应用层协议，使用TCP可靠数据传输。
+
+
+
+\subsection*{2.取回邮件}
+\noindent
+\circled{1}使用HTTP或者IMAP。
+
+
+\section*{2.4 DNS}
+\label{sec:2.1.4}
+\subsection*{1.作用 }
+\noindent
+\circled{1}能进行主机名到IP地址转换的目录服务；\\
+\circled{2}一个由分层的DNS服务器实现的分布式数据库；\\
+\circled{3}使得主机能够查询分布式数据库；
+
+
+\subsection*{2.概念}
+\noindent
+\circled{1}分布式、层次数据库；\\
+\circled{2}三种服务器类型：根DNS服务器、顶级域DNS服务器、权威DNS服务器；
+
+
+
+
+\subsection*{3.构成 }
+\noindent
+\circled{1}解析器：本地应用；\\
+\circled{2}域名服务器；\\
+\circled{3}DNS协议：记录（RR）和报文，查询报文和响应报文格式一致；
+
+
+
+\subsection*{4.域名解析的过程}
+\noindent
+\circled{1}解析器->本地DNS服务器->顶级域服务器->权威名字
+服务器，返回；\\
+\circled{2}DNS缓存：能够将映射缓存到本地存储器中，减少时延；
+
+
+
+\section*{2.6 内容分发网络CDN}
+\label{sec:2.1.6}
+\subsection*{1.概念 }
+\noindent
+\circled{1}管理分布在多个地理位置的服务器，在它的服务器中存储视频的副本，以便更接近用户提供内容；\\
+\circled{2}有专用CDN、第三方CDN。
+
+
+\subsection*{2.原理}
+\noindent
+\circled{1}在全网部署缓存节点，内容预先部署到CDN缓存节点上；\\
+\circled{2}用户请求通过域名解析重定向向离自己“最近的节点”请求内容。
+
+
+\subsection*{3.服务器安置原则 }
+\noindent
+\circled{1}深入；\\
+\circled{2}邀请做客。
+
+
+\section*{2.7 套接字编程}
+\label{sec:2.1.7}
+\subsection*{\textcolor{green!70!black}{1.UDP套接字编程（理解）} }
+\noindent
+\circled{1}UDP SOCKET数据传输的特点：无连接、不可靠、面向报文。
+
+
+\subsection*{\textcolor{green!70!black}{2.TCP套接字编程（理解）} }
+\noindent
+\circled{1}TCP SOCKET数据传输的特点：面向连接，可靠字节流服务；\\
+\circled{2}三次握手：客户首先发送报文给serverSOCKET，服务器收到后
+生成一个新的connectionSOCKET；\\
+\circled{3}相比于UDP，TCP发送报文时不需要附上目的地址。
+
+
+\begin{highlightedsection}{}
+    第三章\,\,运输层
+\end{highlightedsection}
+\label{sec:3.1}
+\section*{3.1 概述和传输层服务 }
+\label{sec:3.1.1}
+\subsection*{1.概述 }
+\noindent
+\circled{1}运输层协议只运行在端系统中，为运行在不同端系统上的应用进程之间提供逻辑通信；\\
+\circled{2}运输层将应用层报文转换成运输层报文段发送给网络层；\\
+\circled{3}运输层有两种协议：TCP和UDP；\\
+\circled{4}TCP和UDP可以将两个端系统间IP的交付服务扩展为运行在端系统上的两个进程之间的交付服务；\\
+\circled{5}UDP提供服务：进程到进程的数据交付、差错检查，TCP还提供：可靠数据传输、拥塞控制。
+
+\subsection*{2.运输层与网络层之间的关系 }
+\noindent
+\circled{1}网络层提供了主机之间的逻辑通信；\\
+\circled{2}运输层为运行在不同主机上的进程之间提供逻辑通信；\\
+\circled{3}如果网络层协议无法为主机之间发送的运输层报文段提供时延或带宽保证的话，运输层协议
+也就无法为进程之间发送的应用程序提供时延或带宽保证。
+
+
+\section*{3.2 多路复用与多路分解}
+\label{sec:3.1.2}
+\subsection*{1.定义}
+\noindent
+\circled{1}将由网络层提供的主机到主机的交付服务扩展为进程到进程的数据交付服务；\\
+\circled{2}多路分解：将运输层报文段中的数据交付到正确的套接字的工作；\\
+\circled{3}多路复用：在源主机从不同的套接字中收集数据块，并为每个数据块封装上
+首部信息从而生成报文段，然后将报文段传递到网络层；\\
+\circled{4}周知端口号：0-1023。
+
+\subsection*{2.无连接的多路复用与多路分解 }
+\noindent
+\circled{1}UDP套接字是由一个二元组全面标识的，该二元组包含一个IP地址和一个目的端口号。
+
+\subsection*{3.面向连接的多路复用与多路分解}
+\noindent
+\circled{1}TCP套接字是由一个二四元组全面标识的，该四元组包含：源IP地址、源端口号、目的IP地址、目的端口号。
+\circled{2}服务器主机支持多个并行的TCP套接字。
+
+\subsection*{4.Web服务器与TCP}
+\noindent
+\circled{1}连接套接字与进程并非一一对应，一个进程可以拥有多个连接套接字。
+
+\section*{3.3 无连接运输：UDP}
+\label{sec:3.1.3}
+\subsection*{1.UDP的必要性}
+\noindent
+\circled{1}关于发送什么数据以及何时发送的应用层控制更为精细：适合实时应用；\\
+\circled{2}无需连接建立：不会引入建立连接的时延；\\
+\circled{3}无连接状态；\\
+\circled{4}分组首部开销小。
+
+\subsection*{2.UDP报文段结构 }
+\noindent
+\circled{1}源端口号；\\
+\circled{2}目的端口号；\\
+\circled{3}长度：指示了UDP报文段的字节数（首部＋数据）；\\
+\circled{4}检验和：检查在报文段中是否出现了差错；\\
+\circled{5}应用层数据。
+
+\subsection*{3.UDP检验和}
+\noindent
+\circled{1}发送方：对报文段中的所有十六比特字的和进行反码运算，求和时遇到的所有溢出都回卷；\\
+\circled{2}接收方：所有的十六比特字（包括检验和）加起来，和应该为16个1。
+
+
+\section*{3.4 可靠数据传输原理}
+\label{sec:3.1.4}
+\subsection*{\textcolor{green!70!black}{1.构造可靠数据传输协议(理解)}}
+\noindent
+\circled{1}经完全可靠信道的可靠数据传输rdt1.0：\\
+（1）假设底层信道完全可靠，没有比特差错和丢包；\\
+（2）有限状态机：箭头指示协议从一个状态转换到另一个状态，引起状态转换的事件标注在横线上方，事件发生时采取的操作显示在横线下方，初始状态用虚线表示；\\
+（3）有完全可靠的信道，接收端不需要提供任何反馈信息给发送方。\\
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{rdt1.0.png}
+    \caption{rdt1.0状态图}
+\end{figure}
+
+\noindent
+\circled{2}经具有比特差错信道的可靠数据传输rdt2.0：\\
+（1）更为实际的模型是分组中的比特可能受损的模型，但假定所有发送的分组将按发送的顺序被接收；\\
+（2）为了处理比特差错，还需要：差错检测、接收方反馈（ACK、NAK）、重传功能；\\
+（3）停等协议：发送方每发送一个分组就停下来等待接收方的确认，直到收到确认后才继续发送下一个分组；\\
+（4）缺陷：没有考虑到ACK或NAK分组受损的可能性。\\
+\circled{3}rdt2.1、2.2：\\
+（1）rdt2.1：当接收到失序分组时，接收方发送ACK；收到受损的分组，发送NAK或对上次正确接受的分组发送ACK;\\
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{rdt2.1发送方.png}
+    \caption{rdt2.1发送方状态图}
+\end{figure}
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{rdt2.1接收方.png}
+    \caption{rdt2.1接收方状态图}
+\end{figure}
+
+\noindent
+（2）rdt2.2：用ACK0、ACK1代替NAK，接收方此时必须包括由一个ACK报文所确认的分组序号，发送方此时必须检查接收到的ACK报文中被确认的分组序号；\\
+\circled{4}经具有比特差错的丢包信道的可靠数据传输rdt3.0：\\
+（1）rdt3.0在rdt2.0的基础上增加了对底层信道丢包的处理：如何检测丢包以及发生丢包后应该做什么；\\
+（2）对于第二个问题，rdt2.0使用检验和、序号、ACK分组和重传后能够处理，rdt3.0需要解决第一个问题；\\
+（3）rdt3.0中，发送方使用倒计数定时器，超时重传；\\
+（4）rdt3.0有时被成为比特交替协议。\
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{rdt3.0发送方.png}
+    \caption{rdt3.0发送方状态图}
+\end{figure}
+
+\subsection*{2.流水线可靠数据传输协议}
+\noindent
+\circled{1}rdt3.0是停等协议，发送方信道利用率低；\\
+\circled{2}对于这种问题，解决方法是：不以停等方式运行，采用流水线技术；\\
+\circled{3}流水线技术使得rdt必须：增加序号范围、增加发送方和接收方的缓存；\\
+\circled{4}解决流水线差错恢复有两种基本方法：回退N步GBN和选择重传SR。
+
+\subsection*{3.回退N步GBN}
+\noindent
+\circled{1}允许发送方连续发送多个分组，但流水线中的未确认分组数不能超过某个最大允许数N；\\
+\circled{2}基序号：最早未确认的分组序号，下一个序号：最小的未使用序号；\\
+\circled{3}N:窗口长度，流量控制是限制N大小的原因；\\
+\circled{4}发送方：仅使用一个定时器，可被当作最早的未确认分组的定时器，如果收到一个ACK，但仍有未确认分组，则重启定时器；
+接收方：如果分组是按顺序接收的，则将其交付给上层，如果分组是失序的，则全部丢弃。\\
+
+
+
+\subsection*{4.选择重传SR}
+\noindent
+\circled{1}通过让发送方仅重传它怀疑在接收方出错的分组，避免不必要的重传；\\
+\circled{2}SR接收方将确认一个正确接收的分组不论其是否失序，
+失序的分组将被缓存直至所有丢失分组都被接收到为止，这时才可以把缓存数据交付给上层；\\
+\circled{3}发送方收到ACK后窗口base移动到具有最小序号的未确认分组处；\\
+\circled{4}窗口长度必须小于等于序号空间大小的一半。
+
+\section*{3.5 面向连接的传输：TCP}
+\label{sec:3.1.5}
+\subsection*{1.TCP连接}
+\noindent
+\circled{1}TCP是面向连接的，是逻辑连接，并不是物理连接；\\
+\circled{2}应用进程发送数据之前，必须先“握手”。客户首先发送一个特殊报文段，服务器用另一个特殊报文段响应，最后客户用第三个特殊报文段作为响应；\\
+\circled{3}TCP可从缓存中取出并放入报文段中的数据数量受限于最大报文段长度（MSS），MSS通常根据最大链路层帧长度（MTU）来设置，注意MSS不包括首部TCP报文段长度；\\
+\circled{4}TCP连接的组成包括：一台主机上的缓存、变量和与进程连接的套接字（注意是主机上缓存不是路由器等缓存）。
+
+\subsection*{2.TCP报文段结构}
+\noindent
+\circled{1}源端口号、目的端口号、序号、确认号、首部长度、保留未用、标志字段、检验和、
+接受窗口、紧急数据指针、选项（发送方与接收方协商最大报文段长度）、数据；\\
+\circled{2}序号和确认号：序号是报文段首字节的字节流编号；确认号：主机希望从另一主机收到的下一字节的序号。
+
+\subsection*{3.往返时间估计与超时}
+\noindent
+\circled{1}TCP仅为一个已发送的但尚未被确认的报文段估计SampleRTT，并且不为已重传的报文段计算RTT；\\
+\circled{2}SampleRTT值会波动，故必须对其取平均：$EstimatedRTT=(1-\alpha)EstimatedRTT+\alpha SampleRTT$,通常
+$\alpha$取0.125；\\
+\circled{3}除了估算RTT，测量RTT的变化也有用处：$DevRTT=(1-\beta)DevRTT+\beta \vert SampleRTT-EstimatedRTT\vert $，
+$\beta$推荐值通常为0.25；\\ 
+\circled{4}超时间隔：$TimeoutInterval=EstimatedRTT+4DevRTT$。
+
+\subsection*{4.可靠数据传输}
+\noindent
+\circled{1}TCP的可靠数据传输服务确保一个进程从其接收缓存中读出的数据流是无损坏、无间隙、非冗余
+和按序的数据流；\\
+\circled{2}当主机B的确认报文丢失时，由于主机A的定时器超时，主机A会向主机B重传报文，而主机B通过
+序号会发现该报文段已经被接收，则丢弃；\\
+\circled{3}超时间隔加倍：每次超时重传时，TCP都会将超时间隔加倍，而不是用TimeInternal；\\
+\circled{4}快速重传：超时触发重传存在的问题之一是可能导致超时周期相对较长，这是，我们需要
+根据冗余ACK进行快速重传：如果TCP接收到对相同数据的3个冗余ACK，就进行快速
+重传，即在定时器过期前重传丢失的报文段。
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{ack.jpg}
+    \caption{产生TCP ACK的建议}
+\end{figure}
+\subsection*{5.流量控制}
+\noindent
+\circled{1}目的：消除发送方使接收方缓存溢出的可能性；\\
+\circled{2}手段：将接收窗口rwnd大小捎带方式传递给发送端；\\
+\circled{3}与拥塞控制的不同之处：拥塞控制是针对网络的拥塞；流量控制是为了消除发送方使接收方
+缓存发生溢出的可能性。
+
+\subsection*{\textcolor{green!70!black}{6.TCP连接管理(理解)}}
+\noindent
+\circled{1}连接建立： 3 次握手技术 对双方选择的初始序号给予确认（控制变量
+置位），准备好缓冲区等资源 \\ 
+第一次握手：syn=1， ack=0,$seq=client\_isn$；\\ 
+第二次：syn=1，ack=$client\_isn+1$；$seq=server\_isn$ ；\\ 
+第三次：（syn=0）ack=$server\_isn+1$,$seq=client\_isn+1$；（为什么需要初始序号？TCP为什么三次握手而不是两次？）\\
+\circled{2}连接拆除：对称，存在2军问题不完美（也不存在完美释放连接的方案，
+用定时器凑合解决）；\\
+\circled{3}连接状态及其变迁： 
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{状态.jpg}
+    \caption{连接状态及其变迁}
+\end{figure}
+
+\section*{3.6 拥塞控制原理}
+\label{sec:3.1.6}
+\subsection*{1.拥塞产生的原因及代价 }
+\noindent
+\circled{1}原因：a.当发送速率接近共享链路吞吐量时，平均时延会越来越大，超过共享链路容量时，平均排队分组
+越来越多，平均时延也会会无穷大；\\
+\circled{2}代价：排队时延；发送方必须执行重传以补偿因为缓存溢出而丢弃掉的分组；发送方会利用链路带宽
+来转发不必要的分组副本；当一个分组沿一条路径被丢弃时，每个上游路由器用于转发该分组到丢弃该分组而使用的传输容量
+被浪费掉了。
+
+\subsection*{\textcolor{green!70!black}{2.拥塞控制手段(理解)} } 
+\noindent 
+\circled{1}端到端拥塞控制（TCP、IP默认使用）：网络层没有为运输层拥塞控制提供显式支持，端系统通过对网络行为的观察来推断（超时或者冗余ACK）；\\
+\circled{2}网络辅助的拥塞控制（可选择性使用）：路由器向发送方提供关于网络中拥塞状态的显式反馈信息，用以指示拥塞情况（直接反馈给发送方；
+或者标记更新发送方流向接收方分组的某个字段反馈，接收方再向发送方通知拥塞）。
+
+
+
+\section*{\textcolor{red}{3.7 TCP拥塞控制（掌握）}}
+\label{sec:3.1.7}
+\subsection*{1.如何限制发送方的发送速率}
+\noindent
+\circled{1}cwnd限制了发送方未被确认的数据量，间接的限制了发送方的发送速率。
+
+
+\subsection*{2.如何检测拥塞}
+\noindent
+\circled{1}超时（拥塞，存在误判的可能性，但是概率比较低）；\\
+\circled{2}三个冗余ACK（轻微拥塞）。
+
+
+\subsection*{2.慢启动}
+\noindent
+\circled{1}一条TCP连接开始时，cwnd的值通常初始设置为一个MSS的较小值；\\
+\circled{2}在慢启动状态，cwnd的值以一个MSS开始并且每当传输的报文首次被确认就增加一个MSS（1-2-4-8）；\\
+\circled{3}慢启动阶段以指数级增长cwnd；\\
+\circled{4}慢启动结束方式：\\
+a.当检测到超时时，TCP将cwnd重新设为1，并将第二个状态变量的值ssthresh（慢启动阈值）设为cwnd/2，即
+检测到拥塞时将ssthresh的值设为拥塞窗口值的一半；\\
+b.当cwnd的值为ssthresh时，结束慢启动并转移至拥塞避免模式；\\
+c.如果检测到3个冗余ACK，TCP执行一种快速重传并进入快速恢复状态。
+
+
+\subsection*{3.拥塞避免}
+\noindent
+\circled{1}进入到拥塞避免状态代表cwnd的值大约是上次遇到拥塞时的值一半；\\
+\circled{2}此时，每个RTT只讲cwnd增加一个MSS（注意不是每个ACK）；\\
+\circled{3}当出现超时时，与慢启动阶段一样；\\
+\circled{4}检测到3个冗余ACK时：TCP将cwnd的值减半（为了使测量结果更好，已收到的3个冗余ACK要加上3个MSS），将ssthresh的值记录为cwnd的值的一半。
+
+\subsection*{4.快速恢复}
+\noindent
+\circled{1}当出现超时时，与慢启动阶段一样；\\
+\circled{2}对于引起TCP进入快速恢复状态的缺失报文段，每当收到冗余的ACK，cwnd的值增加一个MSS，最终当
+对丢失报文段的一个ACK到达时，降低cwnd的值后进入拥塞避免状态。
+
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{拥塞控制转换.jpg}
+    \caption{拥塞控制转换}
+\end{figure}
+
+\subsection*{5.TCP Tahoe和\textcolor{red}{TCP reno（掌握）}}
+\noindent
+\circled{1}TCP Tahoe（无快速恢复）：在拥塞避免阶段时，如果遇到丢包情况（不管是超时还是3个冗余ACK），拥塞窗口都被设置为1MSS，ssthresh值被设为cwnd/2，而后进入慢启动阶段；\\
+\circled{2}TCP reno：在拥塞避免阶段时，如果遇到丢包情况（3个冗余ACK），ssthresh值被设为cwnd/2，拥塞窗口都被设置为ssthresh+3MSS，而后线性增长。\\
+  
+
+\begin{highlightedsection}{}
+    第四章\,\,网络层：数据平面
+\end{highlightedsection}
+\label{sec:4.1}
+\section*{4.1 网络层概述}
+\label{sec:4.1.1}
+\subsection*{1.网络层的主要服务和功能}
+\noindent
+\circled{1}转发：转发是在数据平面中实现的唯一功能。当一个分组到达某路由器的一条输入链路时，该路由器必须将
+该分组移动到适当的输出链路；\\
+\circled{2}路由选择：在网络层的控制平面中实现。当分组从发送方流向接收方时，网络层必须决定这些分组所采用
+的路由或路径，计算这些路径的算法被称为路由选择算法；\\
+\circled{3}转发在很短的时间尺度内发生，通常用硬件实现；路由选择在长的多的时间尺度内发生，因此通常用软件来实现。
+
+\subsection*{2.实现网络层功能的两种方式}
+\noindent
+\circled{1}控制平面传统的方法：路由选择算法决定了插入转发表中的值；\\
+\circled{2}控制平面SDN方法：远程控制器计算和分发转发表以供每台路由器所使用，该方法是软件定义网络（SDN）的关键。
+
+\subsection*{3.网络服务模型}
+\noindent
+\circled{1}网络层能提供的某些可能的服务：确保交付、具有时延上界的确保交付、有序分组交付、确保最小带宽、
+安全性；\\
+\circled{2}网络层提供单一服务：尽力而为服务。
+
+
+\section*{4.2 路由器工作原理}
+\label{sec:4.1.2}
+\subsection*{1.路由器构成及其主要功能}
+\noindent
+\circled{1}输入端口：执行终结入物理链路的物理层功能、执行查找功能；\\
+\circled{2}交换结构：将路由器的输入端口连接到它的输出端口；\\
+\circled{3}输出端口：存储从交换结构接收的分组、执行必要的链路层和物理层功能进而在输出链路上传输分组；\\
+\circled{4}路由选择处理器：执行控制平面功能。
+
+\subsection*{2.输入端口处理和基于目的地转发}
+\noindent
+\circled{1}转发表格式：前缀匹配与链路接口；\\
+\circled{2}路由器用分组目的地址的前缀与路由表中的表项进行匹配，如果存在一个匹配项，则路由器向相关联
+链路转发分组；\\
+\circled{3}有多个匹配项时，使用最长前缀匹配原则；\\
+\circled{4}链路层交换机中，除了发送帧进入交换结构去往输出端口以外，还要查找链路层目的地址并采取几个操作。
+
+\subsection*{3.交换}
+\noindent
+\circled{1}交换可以用多种方式；\\
+\circled{2}经内存交换：分组到达输入端口时，输入端口先向路由选择处理器发送中断信号，然后分组被复制到处理器内存中
+，一次只能执行一次内存读写；\\
+\circled{3}经总线交换：输入端口经一根共享总线将分组直接传输到输出端口，不需要路由选择处理器的干预。输入端口
+为分组打上一个标签，只有与该标签匹配的输出端口才能保存该分组。一次只有一个分组能跨过总线；\\
+\circled{4}经互联网络交换：纵横式交换机是这种结构，拥有2N条总线连接N个输入端口和N个输出端口，是非阻塞的。\\
+与前面两种交换方式相比，这种交换方式的优点是能够并行转发多个分组。但是如果两个分组的目的地相同，仍需要排队等候。
+
+\subsection*{4.输出端口处理}
+\noindent
+\circled{1}选择和取出排队的分组进行传输，执行所需的链路层和物理层传输功能。
+
+\subsection*{5.何时出现排队}
+\noindent
+\circled{1}排队的位置和程度取决于流量负载、交换结构的相对速率和线路速率；\\
+\circled{2}输入排队：交换结构速率不够快时，输入端口将会出现分组排队；\\
+\circled{3}输出排队：输出端口的分组调度器在排队分组中选择一个分组来传输；\\
+\circled{4}多少缓存才够用：最新理论，缓存数量（B）应该=平均往返时延（RTT）*链路容量（C）/$\sqrt{N} $。缓存并不是
+越大越好，更大的缓存意味着更多的排队时延
+
+\subsection*{6.分组调度}
+\noindent
+\circled{1}先进先出FIFO：按照分组到达输出链路队列的相同次序来选择分组在链路上传输；\\
+\circled{2}优先权排队：到达输出链路的分组被分类放入输出队列里的优先权类。当一个分组传输时，优先权
+排队规则将从队列为非空的最高优先权类中选择一个传输分组；同意优先类采用FIFO方式；\\
+\circled{3}循环排队：分组被分类，循环调度器在这些类里轮流提供服务；\\
+\circled{4}加权公平排队：与使用循环调度一样，WFQ调度器也以循环方式为各个类提供服务，但其为每个类i分配一个权$w_i$，
+确保类i能接收到的服务部分为$\frac{w_i}{\sum_{}^{}w_j} $。
+
+\section*{4.3 网际协议：IPv4、寻址、IPv6及其他}
+\label{sec:4.1.3}
+\subsection*{1.IPv4数据报格式}
+\noindent
+\circled{1}关键字段：版本号、首部长度、服务类型、数据报长度、标识/标志/片偏移、寿命、协议、首部检验和（
+检验比特错误。见3.3节）、
+源和目的IP地址、选项、数据；\\
+\circled{2}一个IP数据报有总长为20字节的首部。如果数据报承载一个TCP报文段，则每个
+数据报共承载40字节的首部（20字节IP＋20字节TC）。
+
+
+\subsection*{2.IPv4编址}
+\noindent
+\circled{1}主机与物理链路之间的边界叫做接口：\\
+从技术上讲，一个IP地址与一个接口相关联，而不是与包括该接口的主机或者路由器相关联；\\
+一个接口的IP地址的一部分需要由其连接的子网来决定。\\
+\circled{2}子网定义：为了确定子网，分开主机和路由器的每个接口，产生几个隔离的网络岛，
+使用接口端接这些隔离的网络的端点。这些隔离的网络中每一个都叫做一个子网；\\
+\circled{3}IP地址书写方法：点分十进制记法，地址中的每个字节用它的十进制形式书写，
+各字节间以句号(.)隔开，如193.32.216.9，二进制记法为：11000001 00100000 11011000 00001001；\\
+\circled{4}IP地址为子网分配地址，如223.1.1.0/24，有时称为子网掩码；\\
+\circled{5}CIDR无类别域间路由选择：32比特的IP地址被划分为两部分，具有点分十进制数
+形式：$a.b.c.d/x$，其中$x$指示了地址第一部分中的比特数，常被称为地址的前缀；地址剩余的32-
+x比特可认为是用于区分该组织内部设备的，也可以在其中划分子网；\\
+\circled{6}获取一块地址：从一个ISP获取一组地址，ISP会从已分配给它的更大地址块中提取一些地址；或者，可以从ICANN分配地址；\\
+\circled{7}获取主机地址：系统管理员通常手工配置路由器中IP地址；主机地址也可以手动配置，
+但目前更多的是使用DHCP动态主机配置协议来完成，它允许主机自动获取一个IP地址；每个子网都有一个DHCP服务器或者
+DHCP中继代理（通常是路由器，它知道用于该网络的DHCP服务器的地址）；\\
+\circled{8}DHCP分配地址步骤：DHCP服务器发现、DHCP服务器提供、DHCP请求、DHCP ACK；\\
+
+\subsection*{3.网络地址转换NAT}
+\noindent
+\circled{1}家庭网络使用地址空间10.0.0.0/24，仅在专用网络或者具有专用地址的地域使用；\\
+\circled{2}NAT路由器对外界的行为如同一个具有单一IP地址的单一设备，即NAT使能路由器对外隐藏了家庭网络
+的细节；\\
+\circled{3}如何将接收分组转发给对应主机：NAT转换表，表项中包含了端口号及IP地址；\\
+\circled{4}NAT已成为因特网的一个重要组件，成为所谓中间盒。
+
+
+
+\subsection*{4.IPv6}
+\noindent
+\circled{1}IPv6数据报格式：
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{IPv6.jpg}
+    \caption{IPv6数据报格式}
+\end{figure}
+\noindent
+\circled{2}IPV6的变化：扩大的地址标签（32bit->128bit）、简化高效的40字节首部、流标签、不允许分片
+与重新组装、去除首部检验和TTL字段、删除选项字段（IP首部成为定长的40字节）；\\
+\circled{3}\textcolor{green!70!black}{从IPv4到IPv6的迁移：隧道（理解）}
+IPv6能兼容IPv4，但IPv4不能够处理IPv6的数据报；\\
+标志日方法并不可行，故采取建隧道方法：假定两个IPv6节点要使用IPv6数据报进行交互，但他们是
+经由IPv4路由器互联的。我们将两台IPv6路由器之间的中间IPv4路由器的集合称为一个隧道，隧道首部
+IPv4路由器将IPv6数据报放到IPv4的数据（有效载荷）字段中并将目的地址指向尾部IPv6路由器，与隧道尾部相连的IPv6路由器根据IPv4
+数据报的协议字段是41从而将IPv6数据报从IPv4数据报中的数据字段中提取出来。
+
+\newpage
+\begin{highlightedsection}{}
+    第五章\,\,网络层：控制平面
+\end{highlightedsection}
+\label{sec:5.1}
+\section*{5.1 概述}
+\label{sec:5.1.1}
+\subsection*{1.两种方式实现控制平面功能}
+\noindent
+\circled{1}传统方式：每路由器控制；\\
+\circled{2}SDN方式：逻辑集中式控制。
+
+\subsection*{2.每路由器控制}
+\noindent
+\circled{1}每台路由器有一个路由选择组件，用于与其他路由器中的路由选择组件通信，以计算
+转发表的值；\\
+\circled{2}每台路由器都包含转发和路由选择功能。
+
+\subsection*{3.逻辑集中式控制}
+\noindent
+\circled{1}在SDN控制器上由网络应用集中式计算、生成流表。
+
+\section*{5.2 路由选择算法}
+\label{sec:5.1.2}
+\subsection*{1.概述}
+\noindent
+\circled{1}路由目标：找出从源到目的地间的最低开销路径；\\
+\circled{2}路由分类：集中式路由选择算法、分散式路由选择算法/静态路由选择算法、动态路由选择算法；\\
+\circled{3}集中式路由选择算法：要求算法在真正开始计算之前，要以某种方式获得连通性和链路开销
+方面的完整信息；\\
+\circled{4}分散式路由选择算法：路由器以迭代、分布式的方式计算出最低开销路径。
+
+\subsection*{\textcolor{red}{2.链路状态路由选择LS算法（掌握）}}
+\noindent
+\circled{1}网络拓扑和链路开销：通过让每个节点向网络中所有其他节点广播链路状态分组来完成，这经常
+由链路状态广播算法来完成；\\
+广播的结果就是所有节点都具有该网络的统一、完整的视图，从而进行路由选择算法\\
+\circled{2}Dijkstra算法、Prim算法；\\
+\circled{3}LS算法可能出现的问题及原因：可能出现路由振荡（见课本p253）；\\
+\circled{4}振荡解决方案：确保并非所有的路由器都同时运行LS算法。
+
+\subsection*{\textcolor{red}{3.距离向量路由选择DV算法（掌握）}}
+\noindent
+\circled{1}分布式：每个节点都要从一个或多个直接相连邻居接收某些信息，执行计算，然后将其计算结果
+分发给邻居；\\
+迭代：此过程一直要持续到邻居间无更多信息要交换为止；\\
+异步：不要求所有节点相互之间步伐一致地操作；\\
+\circled{2}Bellman-Ford方程：$d_x(y)=min_v\{c(x,v)+d_v(y)\}$（有点类似于线性规划），方程的解
+为节点x的转发表提供了表项；\\
+\circled{3}每个节点x维护路由选择信息：x直接到邻居地开销$c(x,v)$、节点x的距离向量$D_x(y)$、它的每个邻居的距离向量$D_v(y)$；\\
+\circled{4}在DV算法中，每个节点不时地向它的每个邻居发送它的距离向量副本，而后邻居下x更新距离向量，如果x的距离
+向量因这个步骤改变，x就像它的每个邻居转发它更新后的距离向量。\\
+\circled{5}DV算法存在的问题与解决办法：\\
+（1）链路开销改变与链路故障：当某条链路开销增加时，可能得到错误的更新结果（详情见课本p.257），引发路由
+选择环路；\\
+（2）解决办法（增加毒性逆转）：如果z通过y路由选择到达目的地x，则z将通告y，$D_z(x)=\infty$。
+
+\section*{5.3 因特网中自治系统内部的路由选择：OSPF}
+\label{sec:5.1.3}
+\subsection*{\textcolor{green!70!black}{1.层次路由（理解）}}
+\noindent
+\circled{1}一个平面解决路由的问题：计算、传输和存储路由信息的量太大，不具
+备可扩展性，也不满足不同网络运营方不同的管理需求；\\
+\circled{2}解决方法：分成自治系统AS，AS 内部之间的节点路由有内部网关协议解决；AS 之间的路
+由，分层解决（路由到网关，由网关路由到目标网关，到了目标AS内部，采用AS内部的路由解决）；\\
+\circled{3}AS：每个AS由一组通常处在相同管理控制下的路由器组成。通常在一个ISP中的路由器以及互联他们的链路
+构成一个AS；\\
+\circled{4}优势：分层路由，解决了规模性问题，管理性问题。
+
+\subsection*{2.开放最短路优先OSPF}
+\noindent
+\circled{1}OSPF是一种链路状态协议，使用洪泛链路状态信息和Dijkstra最低开销路径算法；\\
+\circled{2}其AS内部各条链路开销是由网络管理员配置的。每当一条链路的状态发生改变时，路由器
+向AS内所有其他路由器广播链路状态信息。
+
+\section*{5.4 ISP之间的路由选择：BGP边界网关协议}
+\label{sec:5.1.4}
+\subsection*{1.BGP的作用}
+\noindent
+\circled{1}协调多个AS，将数以千计的ISP粘合起来；\\
+\circled{2}在BGP中，分组并不是到一个特定的地址，而是路由到CIDR化的前缀（x，I），其中x是一个前缀，I是该
+路由器的接口之一的接口号；\\
+\circled{3}从邻居AS获得前缀的可达性信息；\\
+\circled{4}确定到该前缀的“最好的”路由。
+
+\subsection*{2.通告BGP路由信息（获得可达性信息）}
+\noindent
+\circled{1}对于每个AS，其中的路由器要么是网关路由器（AS边缘），要么是内部路由器；\\
+\circled{2}网关路由器参与AS内部路由计算，收集AS内部子网可达信息；\\ 
+网关路由器通过AS间路由向其他AS网关通告子网可达信息；\\
+网关路由器还转发“过手”AS子网可达信息，但是在路由属性的AS路径上要加上它自己AS编号（防止形成环路）；\\
+网关路由器通过i-BGP向AS内部所有路由节点通告收集到的子网可达信息；\\ 
+内部路由器，通过AS内路由和AS间路由共同决定向AS外部子网的下一跳（内部网关协议决定如何前往网关，外部网关协议
+决定通过那个网关可到达AS外部子网）。
+
+\subsection*{3.确定最好的路由}
+\noindent
+\circled{1}当路由器通过BGP连接通告前缀时，它在前缀中包含一些BGP属性。前缀及其属性称为路由；\\
+\circled{2}两个较为重要的属性是：AS-PATH和NEXT-HOP；\\
+AS-PATH属性包含通告已经通过的AS的列表，检测和防止通告环路；\\
+NEXT-HOP是AS-PATH起始的路由器接口的IP地址；\\
+\circled{3}热土豆路由选择：选择的路由到开始该路由的NEXT-HOP路由器具有最小开销；\\
+\circled{4}路由器选择算法（比热土豆算法更复杂并结合了其特点）：\\
+路由被指派一个本地偏好值作为其属性之一；\\
+从余下的路由中，将选择具有最短AS-PATH的路由（具有最少AS跳的跳数）；\\
+从余下的路由中使用热土豆路由选择，即选择具有最靠近NEXT-HOP路由器的路由；\\
+如果仍留下多条路由，该路由器使用BGP标识符来选择路由。
+
+\subsection*{4.路由选择策略}
+\noindent
+\circled{1}在路由选择算法中，实际上首先根据本地偏好属性选择路由，本地偏好值由本地AS的策略所决定；\\
+\circled{2}例如一个具有接入ISP和主干提供商网络的自治系统互联网络，接入ISP如何防止转发提供商网络的流量呢？（显然
+接入ISP所得的流量就是以它为目的地，不能再进行转发）这通过控制BGP路由的通告方式来实现（详见课本p.268）。
+
+\subsection*{5.内部网关协议和外部网关协议的对比（了解）}
+\noindent
+\circled{1}内部网关协议重视效率，性能；\\
+\circled{2}外部网关协议重视策略：经济策略和政治策略。
+
+\section*{5.5 ICMP：因特网控制报文协议（了解）}
+\label{sec:5.1.5}
+\subsection*{1.作用}
+\noindent
+\circled{1}主机和路由器用ICMP彼此沟通网络层的信息；\\
+\circled{2}差错报告：当IP路由器不能找到一条通往HTTP请求中所指定的主机的路径时，路由器会向主机生成
+并发出一个ICMP报文以指示该错误；\\
+\circled{3}echo（回显）请求和应答。
+
+\subsection*{2.报文类型}
+\noindent
+\circled{1}有一个类型字段和一个编码字段，并且包含引起该ICMP报文首次生成的IP数据报的首部和前8个字节；\\
+\circled{2}具体分类：\\
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{ICMP.jpg}
+    \caption{ICMP分类}
+\end{figure}
+
+\newpage
+\begin{highlightedsection}{}
+    第六章\,\,链路层和局域网
+\end{highlightedsection}
+\label{sec:6.1}
+\section*{6.1 链路层概述}
+\label{sec:6.1.1}
+\subsection*{1.相关术语}
+\noindent
+\circled{1}节点：运行链路层协议的任何设备；\\
+\circled{2}链路：沿着通信路径连接相邻节点的通信信道；\\
+\circled{3}链路层帧：传输节点将数据报封装在链路层帧中。
+
+\subsection*{2.链路层提供的服务}
+\noindent
+\circled{1}成帧；若干首部字段+一个数据字段\\
+\circled{2}链路接入：介质访问协议MAC规定了帧在链路上传输的规则；\\
+\circled{3}可靠交付：通常通过确认和重传取得；\\
+\circled{4}差错检测和纠正：运输层和网络层也提供有限形式的差错检测，即因特网检验和。链路层的差错检测
+通常更复杂，并且用硬件实现
+
+\subsection*{3.链路层在何处实现}
+\noindent
+\circled{1}大多数情况下，链路层在称为网络适配器的芯片上实现的，有时也称为网络接口控制器NIC；\\
+\circled{2}网络适配器实现了许多链路层服务：成帧、链路访问、错误检测等，因此链路层大部分功能是在硬件中
+实现的；\\
+\circled{3}部分链路层在运行于主机CPU上的软件中实现：组装链路层寻址信息、激活控制器硬件。
+
+\section*{6.2 差错检测和纠正技术}
+\label{sec:6.1.2}
+\subsection*{1.检测差错前提}
+\noindent
+\circled{1}使用纠正比特EDC增强数据D，接受方根据D'和EDC'判断数据是否出错。
+
+\subsection*{2.奇偶校验}
+\noindent
+\circled{1}单个奇偶校验位可能导致接收方检测不出差错，更一般的方法是采取二位奇偶校验；\\
+\circled{2}二维奇偶校验：数据D中的d个比特被分为i行j列，对每行每列计算奇偶值，产生的i+j+1奇偶比特构成了
+链路层帧的差错检测比特；\\
+\circled{3}当出现单个比特差错时，二维奇偶检验不仅能识别差错还能够定位出来差错纠正它；\\
+\circled{4}二维奇偶校验能够检测但不能纠正两个比特的差错。
+
+\subsection*{3.检验和方法}
+\noindent
+\circled{1}将D中的d比特数据作为一个k比特整数的序列处理；\\
+\circled{2}一个简单的检验和方法就是将这k比特整数加起来，并且用得到的和作为差错检测比特，如因特网检验和（3.3节）。
+
+\subsection*{\textcolor{red}{4.循环冗余检测CRC/多项式编码（掌握）}}
+\noindent
+\circled{1}需要：生成多项式G（r+1比特）、被发送的数据D（d比特）、附加比特R（r比特）；\\
+\circled{2}发送方计算R：$R=remainder\frac{D*2^r}{G} $；\\
+\circled{3}接收方检测比特差错：用G去除接收到的d+r比特，如果余数非0，则认为出现了差错，否则
+认为没有出现差错；\\
+\circled{4}每个CRC标准都能检测到小于r+1比特的差错。大于r+1比特的突发差错以$1-0.5^r$概率被检测到。
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=0.8\textwidth]{CRC.jpg}
+    \caption{一个简单的CRC计算}
+\end{figure}
+
+
+\section*{6.3 多路访问链路和协议}
+\label{sec:6.1.3}
+\subsection*{1.网络链路类型}
+\noindent
+\circled{1}点对点链路：由链路一端的单个发送方和链路另一端的单个接收方组成；\\
+\circled{2}广播链路：当任何一个节点传输一个帧时，信道广播该帧，每个其他节点都收到一个副本；\\
+\circled{3}广播链路引入了问题：duolufangwen问题，如何协调多个发送和接收节点对一个共享广播信道
+的访问（多个节点同时传输帧会引发碰撞）；\\
+\circled{4}对多路访问问题，有多路访问协议：信道划分协议、随机接入协议、轮流协议。
+
+\subsection*{2.信道划分协议}
+\noindent
+\circled{1}时分复用TDM：将时间划分为多个时间帧，进一步把每个时间帧划分为N个时隙，每个节点占用一个时隙，节点按照顺序循环轮流发送；\\
+\circled{2}频分复用FDM：将Rbps信道划分为N个频段，每个节点占用一个频率（具有$R/N$bps带宽）；\\
+\circled{3}TDM、FDM的缺点：TDM、FDM把节点速率限制在$R/N$bps，同时TDM使得节点必须总是等待它在传输
+序列中的轮次；\\
+\circled{4}码分多址CDMA：对每个节点分配一种不同的编码，这使得不同的节点能够同时传输。
+
+\subsection*{3.随机接入协议}
+\noindent
+\circled{1}一个传输节点总是以信道的全部速率进行发送。当有碰撞时，每个涉及碰撞的节点反复地重发它的帧，直到
+该帧无碰撞地通过为止。但是并不是立即重发，而是等待一个随机时延；\\
+\circled{2}时隙ALOHA：\\
+作出假设：\\
+（1）所有帧由L比特组成\\
+（2）时间被划分为L/R秒地时隙（一个时隙等于一帧传输的时间）\\
+（3）节点只在时隙起点开始传输帧\\
+（4）节点是同步的，每个节点都知道时隙何时开始\\
+（5）如果在一个时隙中有两个或者更多个帧碰撞，则所有节点在该时隙结束之前检测到该碰撞事件\\
+时隙ALOHA操作：\\ 
+（1）当节点有一个新帧要发送时，它等到下一个时隙开始并在该时隙传输整个帧\\
+（2）如果没有碰撞，该节点成功地传输它的帧，从而不需要考虑重传该帧。（如果该节
+点有新帧，它能够为传输准备一个新帧\\
+（3）如果有碰撞，该节点在时隙结束之前检测到这次碰撞。该节点以概率p在后续的每
+个时隙中重传它的帧，直到该帧被无碰撞地传输出去\\
+时隙ALOHA最大效率：\\
+当有N个活跃节点时，效率为$Np(1-p)^N$，最大效率为$\frac{1}{e}$（N无穷大时） 。 \\
+\circled{3}ALOHA:\\
+非时隙、完全分散，最大效率仅为$\frac{1}{2e} $。\\
+\circled{4}载波侦听多路访问CSMA：\\
+（1）载波侦听：一个节点在传输之前先听信道。\\
+（2）碰撞原因：广播信道的端到端时延导致一个节点在侦听时可能并不能侦听到另一个节点已经传输的在路上的帧。\\
+\circled{5}具有碰撞检测的载波侦听多路访问CSMA/CD：\\
+（1）CSMA中，节点发生碰撞后仍继续传输；在CSMA/CD中，当某节点执行碰撞检测时，一旦检测到碰撞将立即停止传输，并
+等待一个随机时间量且信道空闲时再传输。\\
+（2）随机时间量选择：碰撞节点少时，时间短；碰撞节点多时，时间长。\\
+二进制指数后退法：传输一个帧时，该帧经历了连续的n次碰撞后，节点随机从$[0,1,2,...,2^n-1]$选择一个K，
+等待K*512比特传输时间。\\
+（3）CSMA/CD效率：\\
+定义：当有大量的活跃节点，且每个节点有大量的帧要发送时，帧在信道中无碰撞地传输的那部分时间在长期运行
+时间中所占的份额。\\
+近似公式：$\frac{1}{1+5\frac{d_{prop}}{d_{trans}} } $，$d_{prop}$表示信号能量
+在任意两个适配器之间传播所需的最大时间，$d_{trans}$表示传输一个最大长度的以太网帧的时间。
+
+
+\section*{6.4 交换局域网}
+\label{sec:6.1.4}
+\subsection*{1.链路层寻址和ARP}
+\noindent
+\circled{1}MAC地址：\\
+（1）链路层地址，只有主机和路由器的适配器具有MAC地址，链路层交换机不具备；\\
+（2）MAC地址长度为6字节，通常用十六进制表示法，如5C-BD-D2-C7-56-2A；\\
+（3）没有两块适配器拥有相同的地址，IEEE管理着MAC地址空间，并且无论适配器位于何处MAC地址都不会变；\\
+（4）而IP则不同，IP具有层次结构（一个网络部分和一个主机部分），主机移动时，主机的IP需要改变；\\
+（5）MAC广播地址：FF-FF-FF-FF，所有适配器均可收到\\
+\circled{2}地址解析协议ARP\\
+（1）目的：物理网络范围内IP地址到MAC地址的转换；\\
+（2）与DNS的区别：DNS为在因特网中任何地方的主机解析主机名，ARP只为同一子网上的主机和路由器接口解析IP地址；\\
+（3）工作原理：广播查询，单播应答；\\
+\circled{3}发送数据报到子网以外：\\
+发送方首先把目的MAC地址置为相邻路由器接口的MAC地址，路由器接收到这个帧后，通过ARP查询接收方MAC地址，再把接收方
+MAC地址置为目的MAC地址。
+
+\subsection*{2.以太网}
+\noindent
+\circled{1}以太网帧结构：数据字段、目的地址、源地址、类型字段、CRC、前同步码；\\
+\circled{2}以太网提供的服务：无连接服务，不可靠服务；\\
+\circled{3}\textcolor{red}{访问控制技术CSMA/CD（掌握）：}见6.3.3；\\
+\circled{4}IEEE802.3标准，链路层和相应的物理层。
+
+
+
+\subsection*{3.链路层交换机}
+\noindent
+\circled{1}交换机的工作原理：\\
+（1）转发和过滤：\\
+转发是决定一个帧应该被导向哪个接口，并把该帧移动到那些接口的交换机功能；\\
+过滤是决定一个帧应该转发到某个接口还是将其丢弃的交换机功能；\\
+交换机的转发和过滤功能借助于交换机表完成，基于MAC地址而不是基于IP地址转发分组\\
+（2）自学习：\\
+交换机表是自动、动态、自治地建立的，是自学习的。\\
+\begin{figure}[H]  % H 表示固定图片位置
+    \centering
+    \includegraphics[width=\textwidth]{自学习.jpg}
+    \caption{自学习实现方式}
+\end{figure}
+\noindent
+\circled{2}\textcolor{green!70!black}{交换机和路由器比较（理解）}\\
+交换机用MAC地址转发分组，路由器用IP地址转发分组；\\
+交换机是第二层的分组交换机，路由器是第三层的分组交换机；\\
+交换机寻址扁平，路由器寻址分层次不会出现循环；\\
+交换机即插即用，路由器不是，需要认为配置IP地址才能用。
+
+
+
+\begin{highlightedsection}{}
+    附\,\,\,\,\,计网英文术语缩写对照表
+\end{highlightedsection}
+\label{app:glossary}
+\noindent
+\textcolor{red}{第一章}\\
+ISP：因特网服务供应商\\
+RFC：请求评论\\
+LAN：局域网\\
+UTP：无屏蔽双绞线\\
+FDM：频分复用\\
+TDM：时分复用\\
+POP：存在点\\
+IXP：因特网交换点\\
+API：应用编程接口\\
+\textcolor{red}{第二章}\\
+HTTP：超文本传输协议\\
+SMTP：简单邮件传输协议\\
+IMAP：因特网邮件访问协议\\
+DNS：域名系统\\
+TLD：顶级域\\
+RR：资源记录\\
+CDN：内容分发网\\
+\textcolor{red}{第三章}\\
+Rdt：可靠数据传输\\
+Udt：单向数据传输\\
+FSM：有限状态机\\
+ARQ：自动重传请求\\
+GBN：回退N步\\
+SR：选择重传\\
+MSS:最大报文段长度\\
+MTU：最大传输单元\\
+EWMA：指数加权移动平均\\
+ABR：ATM可用比特率\\
+AIMD：加性增、乘性减\\
+\textcolor{red}{第四章}\\
+SDN：软件定义网络\\
+TCAM：三态内容可寻址存储器\\
+HOL：队列首部\\
+AQM：主动队列管理\\
+RED：随机早期检测\\
+FIFO\ FCFS：先来先服务\\
+WFQ：加权公平排队\\
+CIDR：无类别域间路由选择\\
+DHCP：动态主机配置协议\\
+NAT：网络地址转换\\
+\textcolor{red}{第五章}\\
+LS：链路状态\\
+DV：距离向量\\
+AS：自治系统\\
+OSPF：开放最短路优先\\
+BGP：边界网关协议\\
+eBGP：外部BGP\\
+iBGP：内部BGP\\
+ICMP：因特网控制报文协议\\
+\textcolor{red}{第六章}\\
+MAC：介质访问控制\\
+EDC：纠正比特\\
+CRC：循环冗余检测\\
+FEC：前向纠错\\
+PPP：点对点协议\\
+HDLC：高级数据链路控制\\
+CDMA：码分多址\\
+CSMA：载波侦听多路访问\\
+CSMA/CD：具有碰撞检测的载波侦听多路访问\\
+ARP：地址解析协议\\
+
+
+\end{document}
+
+
